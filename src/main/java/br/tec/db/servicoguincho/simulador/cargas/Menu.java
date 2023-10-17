@@ -1,10 +1,19 @@
 package br.tec.db.servicoguincho.simulador.cargas;
 
-
-import br.tec.db.servicoguincho.simulador.Guincho;
+import br.tec.db.servicoguincho.simulador.cargas.EstadoConservacao;
+import br.tec.db.servicoguincho.simulador.cargas.SimuladorDeOrcamentoImpl;
+import br.tec.db.servicoguincho.simulador.cargas.TipoVeiculo;
+import br.tec.db.servicoguincho.simulador.cargas.VeiculoImpl;
+import br.tec.db.servicoguincho.simulador.cargas.CaminhaoCorrenteGancho;
+import br.tec.db.servicoguincho.simulador.cargas.CaminhaoGuinchoPlataforma;
+import br.tec.db.servicoguincho.simulador.cargas.CaminhaoReboqueIntegrado;
+import br.tec.db.servicoguincho.simulador.cargas.DeslocamentoEntreBairros;
 import br.tec.db.servicoguincho.simulador.SimuladorDeOrcamento;
 import br.tec.db.servicoguincho.simulador.Trajeto;
 import br.tec.db.servicoguincho.simulador.Veiculo;
+import br.tec.db.servicoguincho.simulador.Guincho;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -90,29 +99,21 @@ public class Menu {
                     return;
             }
 
-            System.out.println("Escolha o tipo de guincho:");
-            System.out.println("1 - Caminhão de corrente e gancho");
-            System.out.println("2 - Caminhão de reboque integrado");
-            System.out.println("3 - Caminhão guincho de plataforma");
-
-            int guinchoEscolha = scanner.nextInt();
-            scanner.nextLine(); // Consumir a quebra de linha
-
             Guincho guincho;
+            String tipoGuinchoIdeal;
 
-            switch (guinchoEscolha) {
-                case 1:
-                    guincho = new CaminhaoCorrenteGancho();
-                    break;
-                case 2:
-                    guincho = new CaminhaoReboqueIntegrado();
-                    break;
-                case 3:
-                    guincho = new CaminhaoGuinchoPlataforma();
-                    break;
-                default:
-                    System.out.println("Escolha de guincho inválida.");
-                    return;
+            if (estadoVeiculo == EstadoConservacao.QUEBRADO) {
+                guincho = new CaminhaoCorrenteGancho();
+                tipoGuinchoIdeal = "Caminhão de corrente e gancho";
+            } else if (tipoVeiculo == TipoVeiculo.CAMINHAO) {
+                guincho = new CaminhaoReboqueIntegrado();
+                tipoGuinchoIdeal = "Caminhão de reboque integrado";
+            } else if (tipoVeiculo == TipoVeiculo.MINIVAN || tipoVeiculo == TipoVeiculo.CARRO) {
+                guincho = new CaminhaoGuinchoPlataforma();
+                tipoGuinchoIdeal = "Caminhão guincho de plataforma";
+            } else {
+                System.out.println("Tipo de veículo não suportado.");
+                return;
             }
 
             Trajeto trajeto = new DeslocamentoEntreBairros(distanciaEmKM);
@@ -120,7 +121,9 @@ public class Menu {
             SimuladorDeOrcamento simulador = new SimuladorDeOrcamentoImpl(guincho);
 
             double custoTotal = simulador.calcularCustoTotal(veiculo, trajeto);
+
             System.out.println("Custo total do orçamento: R$" + custoTotal);
+            System.out.println("Tipo de guincho ideal: " + tipoGuinchoIdeal);
 
         } catch (InputMismatchException e) {
             System.out.println("Entrada Inválida. Por favor, digite um número.");
