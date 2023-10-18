@@ -59,7 +59,14 @@ public class Menu {
             int tipoVeiculoEscolha = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
 
-            TipoVeiculo tipoVeiculo = TipoVeiculo.values()[tipoVeiculoEscolha - 1];
+            TipoVeiculo tipoVeiculo;
+
+            if (tipoVeiculoEscolha < 1 || tipoVeiculoEscolha > 4) {
+                System.out.println("Tipo de veículo inválido. Tente novamente.");
+                return;
+            } else {
+                tipoVeiculo = TipoVeiculo.values()[tipoVeiculoEscolha - 1];
+            }
 
             System.out.println("Escolha o estado do veículo:");
             System.out.println("1 - Novo");
@@ -68,7 +75,14 @@ public class Menu {
             int estadoVeiculoEscolha = scanner.nextInt();
             scanner.nextLine(); // Consumir a quebra de linha
 
-            EstadoConservacao estadoVeiculo = (estadoVeiculoEscolha == 1) ? EstadoConservacao.NOVO : EstadoConservacao.QUEBRADO;
+            EstadoConservacao estadoVeiculo;
+
+            if (estadoVeiculoEscolha != 1 && estadoVeiculoEscolha != 2) {
+                System.out.println("Estado do veículo inválido. Tente novamente.");
+                return;
+            } else {
+                estadoVeiculo = (estadoVeiculoEscolha == 1) ? EstadoConservacao.NOVO : EstadoConservacao.QUEBRADO;
+            }
 
             System.out.println("Escolha o trajeto entre bairros:");
             System.out.println("1 - C para C (e vice-versa): 5 km");
